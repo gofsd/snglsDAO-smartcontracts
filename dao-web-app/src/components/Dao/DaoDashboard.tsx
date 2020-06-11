@@ -65,83 +65,21 @@ class DaoHistoryPage extends React.Component<IProps, IState> {
 
   public async componentDidMount() {
     const arc = getArc();
-    const feeContract = new arc.web3.eth.Contract(
-        [
-          {
-            "constant": true,
-            "inputs": [],
-            "name": "listingFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "constant": true,
-            "inputs": [],
-            "name": "membershipFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "constant": true,
-            "inputs": [],
-            "name": "transactionFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-          },
-          {
-            "constant": true,
-            "inputs": [],
-            "name": "validationFee",
-            "outputs": [
-              {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-              }
-            ],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-          }
-        ],
-      "0x8dedb4c0B1fEf53da80BB7907404EC9258EE6A7B"
+    const feeContract = new arc.web3.eth.Contract([ { "constant": true, "inputs": [], "name": "listingFee", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "membershipFee", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "transactionFee", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "validationFee", "outputs": [ { "internalType": "uint256", "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" } ],
+      "0x58dC7440A7D37F200aFf06060DebedA2998d5B60"
     );
     
     this.setState( 
       { 
-        transactionFee: await feeContract.methods.transactionFee().call(),
-        listingFee: await feeContract.methods.listingFee().call(),
-        validationFee: await feeContract.methods.validationFee().call(),
-        membershipFee:  await feeContract.methods.membershipFee().call()
+        transactionFee: arc.web3.utils.fromWei(await feeContract.methods.transactionFee().call()),
+        listingFee: arc.web3.utils.fromWei(await feeContract.methods.listingFee().call()),
+        validationFee: arc.web3.utils.fromWei(await feeContract.methods.validationFee().call()),
+        membershipFee:  arc.web3.utils.fromWei(await feeContract.methods.membershipFee().call())
       }
     );
     Analytics.track("Page View", {
       "Page Name": Page.DAOHistory,
-      "DAO Address": "0x22EC9ecE5CcD92e94f161b98B3914027b42550B4",
+      "DAO Address": "0x230C5B874F85b62879DfBDC857D2230B2A0EBBC9",
       "DAO Name": this.props.daoState.name,
     });
   }
@@ -178,7 +116,7 @@ class DaoHistoryPage extends React.Component<IProps, IState> {
               href="#!"
               onClick={/*isActive*/ true ? this._handleNewProposal : null}
               data-test-id="openJoin"
-              > Get rep </a>
+              > Get reputation </a>
           </div>
         </div>
          {/* Key parameters div */}
@@ -252,6 +190,8 @@ class DaoHistoryPage extends React.Component<IProps, IState> {
                      <ul>
                          <li><span>Sngls:</span><p>2960</p></li>
                          <li><span>SGT:</span><p>543</p></li>
+                         <li><span>ETH:</span><p>0</p></li>
+                         <li><span>GEN:</span><p>0</p></li>
                          <li><span>USDC:</span><p>103</p></li>
                          <li><span>DAI:</span><p>0</p></li>
                      </ul>
@@ -269,7 +209,6 @@ class DaoHistoryPage extends React.Component<IProps, IState> {
                      <ul>
                          <li><span>SGT:</span><p>2960</p></li>
                          <li><span>Sngls:</span><p>140000</p></li>
-                         <li><span>GEN:</span><p>10000000</p></li>
                      </ul>
                  </div>
              </div>
@@ -277,8 +216,7 @@ class DaoHistoryPage extends React.Component<IProps, IState> {
          </div>
 
            </div>
-
-           <h3>TOP PROPOSALS</h3>
+           <br/>
            <h4>Boosted proposals (3)</h4>
            <InfiniteScroll
           dataLength={proposals.length} //This is important field to render the next data
@@ -415,7 +353,7 @@ export default withSubscription({
           orderBy: "closingAt"
           orderDirection: "desc"
           where: {
-            dao: "${"0x97f0a184aea5a64E5F0Ee6367613e458450C0D15"}"
+            dao: "${"0x230C5B874F85b62879DfBDC857D2230B2A0EBBC9"}"
             stage_in: [
               "${IProposalStage[IProposalStage.ExpiredInQueue]}",
               "${IProposalStage[IProposalStage.Executed]}",
